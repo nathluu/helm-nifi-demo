@@ -21,17 +21,22 @@ install() {
     local name="${1:?name is required}"
     local chartPath="${2:?chartPath is required}"
     local valueFilePath="${3:?valueFilePath is required}"
-
+    pushd .
+    cd $chartPath
     helm repo add bitnami https://charts.bitnami.com/bitnami
     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo add dysnix https://dysnix.github.io/charts/
+    helm repo add helm-repo https://charts.helm.sh/stable
     helm repo update
     helm dep up
+    popd
     result=$(kubectl get ns | grep "nifi-ns")
     if [ "x$result" = "x" ]; then
         kubectl create ns nifi-ns
         kubectl label namespace nifi-ns istio-injection=enabled
     fi
-    helm install -f $valueFilePath $name $chartPath
+    helm install -f $valueFilePath $name $chartPath -n nifi-ns
+
 }
 
 require
@@ -40,4 +45,4 @@ if [ "x$istio_version" = "x" -a "$ISTIO_REQUIRED" = "yes" ]; then
     install_istio
 fi
 # install "$@"
-# install values-zk.yml
+install nifi-release ./helm-nifi values-zk.yml
