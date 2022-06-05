@@ -1,0 +1,9 @@
+replicaCount: 1
+
+## Set default image, imageTag, and imagePullPolicy.
+## ref: https://hub.docker.com/r/apache/nifi/
+##
+image:
+  repository: nathluu/nifi
+  tag: "1.15.r6"
+  pullPolicy: "IfNotPresent"
