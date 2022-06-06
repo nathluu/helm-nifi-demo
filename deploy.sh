@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ISTIO_REQUIRED="yes"
+ISTIO_REQUIRED="no"
 
 require() {
     hash kubectl 2>/dev/null || { echo >&2 "kubectl is not installed.  Aborting."; exit 1; }
@@ -21,15 +21,15 @@ install() {
     local name="${1:?name is required}"
     local chartPath="${2:?chartPath is required}"
     local valueFilePath="${3:?valueFilePath is required}"
-    pushd .
-    cd $chartPath
-    helm repo add bitnami https://charts.bitnami.com/bitnami
-    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-    helm repo add dysnix https://dysnix.github.io/charts/
-    helm repo add helm-repo https://charts.helm.sh/stable
-    helm repo update
-    helm dep up
-    popd
+    # pushd .
+    # cd $chartPath
+    # helm repo add bitnami https://charts.bitnami.com/bitnami
+    # helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    # helm repo add dysnix https://dysnix.github.io/charts/
+    # helm repo add helm-repo https://charts.helm.sh/stable
+    # helm repo update
+    # helm dep up
+    # popd
     result=$(kubectl get ns | grep "nifi-ns")
     if [ "x$result" = "x" ]; then
         kubectl create ns nifi-ns
