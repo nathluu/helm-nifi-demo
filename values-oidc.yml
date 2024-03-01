@@ -1,0 +1,37 @@
+replicaCount: 2
+
+## Set default image, imageTag, and imagePullPolicy.
+## ref: https://hub.docker.com/r/apache/nifi/
+##
+image:
+  repository: nathluu/nifi
+  tag: "1.23.2-r8"
+  pullPolicy: "IfNotPresent"
+
+properties:
+  isNode: true
+
+auth:
+  admin: abc@def.onmicrosoft.com
+  oidc:
+    enabled: true
+    discoveryUrl: <OIDC discovery URL>
+    clientId: <client id>
+    clientSecret: <client secret>
+    claimIdentifyingUser: email
+    admin: abc@def.onmicrosoft.com
+    additionalScopes: profile
+
+zookeeper:
+  ## If true, install the Zookeeper chart
+  ## ref: https://github.com/bitnami/charts/blob/master/bitnami/zookeeper/values.yaml
+  enabled: true
+  ## If the Zookeeper Chart is disabled a URL and port are required to connect
+  url: ""
+  port: 2181
+  replicaCount: 1
+
+certManager:
+  enabled: true
+  keystorePasswd: 12345678x@X
+  truststorePasswd: 12345678x@X

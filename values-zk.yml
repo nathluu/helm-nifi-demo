@@ -5,7 +5,7 @@ replicaCount: 1
 ##
 image:
   repository: nathluu/nifi
-  tag: "1.15.3-r6"
+  tag: "1.23.2-r8"
   pullPolicy: "IfNotPresent"
 
 properties:
