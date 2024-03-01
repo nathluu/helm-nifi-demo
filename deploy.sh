@@ -56,7 +56,7 @@ install_nifi() {
     fi
 
 
-    helm install -f $valueFilePath $name $chartPath -n $DEPLOY_NAMESPACE
+    helm upgrade --install -f $valueFilePath $name $chartPath -n $DEPLOY_NAMESPACE
 
 }
 
