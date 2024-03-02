@@ -10,6 +10,15 @@ require() {
     hash helm 2>/dev/null || { echo >&2 "helm is not installed.  Aborting."; exit 1; }
 }
 
+create_istio_gw() {
+    openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:4096 -subj '/O=trustbasevn Inc./CN=trustbase.vn' -keyout trustbase.vn.key -out trustbase.vn.crt
+    openssl req -out gw.aks-npe.trustbase.vn.csr -newkey rsa:4096 -nodes -keyout gw.aks-npe.trustbase.vn.key -subj "/CN=*.aks-npe.trustbase.vn/O=trustbasevn Inc."
+    openssl x509 -req -days 365 -CA trustbase.vn.crt -CAkey trustbase.vn.key -set_serial 0 -in gw.aks-npe.trustbase.vn.csr -out gw.aks-npe.trustbase.vn.crt
+    kubectl create -n istio-system secret generic gw-credential --from-file=tls.key=gw.aks-npe.trustbase.vn.key \
+        --from-file=tls.crt=gw.aks-npe.trustbase.vn.crt --from-file=ca.crt=trustbase.vn.crt
+    kubectl apply -n istio-system -f istio-gw.yml
+}
+
 installed_istio_version() {
     local installed_version=$(istioctl version | grep "control plane" | cut -d':' -f2 | xargs)
     echo "$installed_version"
@@ -57,6 +66,7 @@ install_nifi() {
 
 
     helm upgrade --install -f $valueFilePath $name $chartPath -n $DEPLOY_NAMESPACE
+    kubectl apply -f nifi-vs.yml -n $DEPLOY_NAMESPACE
 
 }
 
@@ -64,6 +74,7 @@ require
 istio_version=$(installed_istio_version)
 if [ "x$istio_version" = "x" -a "$ISTIO_REQUIRED" = "yes" ]; then
     install_istio
+    create_istio_gw
 fi
 
 if kubectl get namespace cert-manager > /dev/null 2>&1; then

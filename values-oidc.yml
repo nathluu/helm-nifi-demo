@@ -10,16 +10,17 @@ image:
 
 properties:
   isNode: true
+  webProxyHost: nifi-release.aks-npe.trustbase.vn,nifi-release.nifi-demo.svc:8443,nifi-release.nifi-demo.svc.cluster.local:8443
 
 auth:
-  admin: abc@def.onmicrosoft.com
+  admin:
   oidc:
     enabled: true
-    discoveryUrl: <OIDC discovery URL>
-    clientId: <client id>
-    clientSecret: <client secret>
+    discoveryUrl: https://login.microsoftonline.com/<tenantid>/v2.0/.well-known/openid-configuration
+    clientId: 
+    clientSecret: 
     claimIdentifyingUser: email
-    admin: abc@def.onmicrosoft.com
+    admin: 
     additionalScopes: profile
 
 persistence:
