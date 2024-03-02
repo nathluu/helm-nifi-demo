@@ -29,5 +29,6 @@ spec:
     loadBalancer:
       consistentHash:
         useSourceIp: true
+        #httpHeaderName: User-Agent
     tls:
       mode: SIMPLE
